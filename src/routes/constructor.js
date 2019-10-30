@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Switch, Route } from 'react-router-dom';
+
+// ## --------- COMPONENTS --------- ## //
+import Header from '../components/Header';
 
 // ## --------- ROUTES --------- ## //
 import * as routes from './names';
@@ -9,32 +12,43 @@ import Register from '../views/register';
 import UserDetails from '../views/userDetails';
 import NotFound404 from '../views/notFound404';
 
+const RouteDefault = ({ component: Component, ...rest }) => (
+	<Route
+	{...rest}
+	render={props => (
+        <Fragment>
+			<Header/>
+			<Component {...props} />
+		</Fragment>
+	)}/>
+);
+
 const Routes = () => {
 	return(
         <Switch>
-            <Route 
+            <RouteDefault 
             path={routes.REGISTER} 
             exact 
             component={Register}
             />
 
-            <Route 
+            <RouteDefault 
             path={`${routes.USER_DETAIL}/:userId`} 
             exact 
             component={UserDetails} 
             />
 
-            <Route 
+            {/* <RouteDefault 
             path='/' 
-            render={props => {
+            component={props => {
                 <Redirect to={{
                     pathname: routes.REGISTER,
                     state: { from: props.location }
                 }}/>
             }} 
-            />
+            /> */}
 
-            <Route 
+            <RouteDefault 
             path='*' 
             component={NotFound404} 
             />

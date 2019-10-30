@@ -3,9 +3,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 
-// ## ---------------------------------------------------------------------------------------------- COMPONENTS
+// ## --------- COMPONENTS --------- ## //
 import Toaster from './components/Toaster';
-import Routes from '../routes/constructor';
+
+// ## --------- ROUTES --------- ## //
+import Routes from './routes/constructor';
 
 const App = props => {
 	if (window) window.scrollTo(0, 0);

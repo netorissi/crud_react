@@ -1,3 +1,9 @@
+
+// ## --------- STEPS REGISTER --------- ## //
+export const STEP_REGISTER_PROFILE = 0;
+export const STEP_REGISTER_ADDRESS = 1;
+
+// ## --------- SELECTS --------- ## //
 export const statesForSelect = [
 	{ value: 'AC', label: 'Acre' },
 	{ value: 'AL', label: 'Alagoas' },
