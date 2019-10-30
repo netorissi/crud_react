@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { CssBaseline } from '@material-ui/core';
 
-function App() {
-  return (
-    <h1>oi</h1>
-  );
+// ## ---------------------------------------------------------------------------------------------- COMPONENTS
+import Toaster from './components/Toaster';
+import Routes from '../routes/constructor';
+
+const App = props => {
+	if (window) window.scrollTo(0, 0);
+
+	const toaster = props.toaster;
+
+	return (
+		<Fragment>
+			<CssBaseline />
+			<Toaster {...toaster} />
+			<Routes />
+		</Fragment>
+	)
 }
 
-export default App;
+const mapStateToProps = state => ({
+	toaster: state.rdToaster
+});
+
+export default withRouter(connect(mapStateToProps)(App));
