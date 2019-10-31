@@ -1,12 +1,12 @@
 Projeto desenvolvido com Create React App para desafio.
 
-## Siga os passos a seguir
+## Baixe o projeto e siga os passos a seguir:
 
 Através do seu terminal ou console, navegue até a pasta raiz do projeto e execute:
 
 ### `npm install`
 
-*Esse comando irá instalar todas dependências do projeto para rodar na máquina*
+*Esse comando irá instalar todas as dependências do projeto para rodar na máquina.*
 
 ### `npm start`
 
@@ -32,6 +32,7 @@ No projeto foram utilizados:
 - Axios para fazer as requisições
 - Cep-Promise para trazer o endereço através do cep digitado
 - React-Icons
+- Paginação na listagem de cadastros
 
 
 ##### Obrigado pela visita :)
