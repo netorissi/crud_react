@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import rdToaster from '../reducers/toaster';
-import rdUser from '../reducers/user';
+import rdUsers from '../reducers/users';
 
 export default combineReducers({
 	rdToaster,
-	rdUser
+	rdUsers
 });

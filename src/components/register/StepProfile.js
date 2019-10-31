@@ -1,71 +1,72 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 
+// ## --------- ACTIONS --------- ## //
+import * as acToaster from '../../actions/toaster';
+import * as acUsers from '../../actions/users';
+
 // ## --------- MATERIAL-UI --------- ## //
-import { withStyles, Grid, TextField, Button } from '@material-ui/core';
+import { withStyles, Grid, TextField, Button, Typography } from '@material-ui/core';
 
 // ## --------- ICONS --------- ## //
-import { MdSend } from 'react-icons/md';
+import { MdSend, MdSave } from 'react-icons/md';
 
 // ## --------- STYLES --------- ## //
 import style from '../../assets/styles/stepProfile';
 
 // ## --------- HELPERS --------- ## //
 import * as formatters from '../../helpers/formatters';
-
-const newProfile = {
-    avatar: null,
-    firstName: '',
-    lastName: '',
-    document: '',
-    email: null,
-    phone: null,
-    cellphone: ''
-}
+import { STEP_REGISTER_ADDRESS } from '../../helpers/constants';
 
 class StepProfile extends Component {
-    
-    state = {
-        profile: {...newProfile},
-        checkProfile: false
+
+    constructor(props) {
+        super(props)
+
+        const userCurrent = props.userCurrent;
+        
+        this.state = {
+            userCurrent,
+            checkProfile: false
+        }
     }
 
+    componentDidMount() {
+        if (window) window.scrollTo(0, 0);
+        this.checkProfile();
+    }
+    
     inputChange = (event, field) => {
-		let { profile } = this.state;
+		let { userCurrent } = this.state;
         if (field === "firstName") 
-            profile.firstName = event.target.value.toUpperCase();
+            userCurrent.firstName = event.target.value.toUpperCase();
         if (field === "lastName") 
-            profile.lastName = event.target.value.toUpperCase();
+            userCurrent.lastName = event.target.value.toUpperCase();
         if (field === "document") 
-            profile.document = formatters.cpfCnpjMask(event.target.value);
+            userCurrent.document = formatters.cpfCnpjMask(event.target.value);
         if (field === "email") 
-            profile.email = formatters.removeAccents(event.target.value.toLowerCase());
+            userCurrent.email = formatters.removeAccents(event.target.value.toLowerCase());
         if (field === "phone") 
-            profile.phone = formatters.phoneMask(event.target.value);
+            userCurrent.phone = formatters.phoneMask(event.target.value);
         if (field === "cellphone") 
-            profile.cellphone = formatters.phoneMask(event.target.value);
-
-		// if (field === "address") client.address = event.target.value.toUpperCase();
-		// if (field === "number") client.number = event.target.value.toUpperCase();
-		// if (field === "neighborhood") client.neighborhood = event.target.value.toUpperCase();
-		// if (field === "complement") client.complement = event.target.value.toUpperCase();
-		// if (field === "city") client.city = event.target.value.toUpperCase();
-		// if (field === "state") client.state = event.target.value;
-        this.setState({ profile });
+            userCurrent.cellphone = formatters.phoneMask(event.target.value);
+            
+        this.setState({ userCurrent });
         this.checkProfile();
     }
     
     checkProfile = () => {
-        let { profile, checkProfile } = this.state;
-        const digitsDocument = profile.document ? profile.document.replace(/\D+/g, "") : [];
+        let { userCurrent, checkProfile } = this.state;
+        const digitsDocument = userCurrent.document ? userCurrent.document.replace(/\D+/g, "") : [];
 
         if (
-            profile.firstName &&
-            profile.lastName &&
+            userCurrent.firstName &&
+            userCurrent.lastName &&
             digitsDocument.length >= 11 && 
             digitsDocument.length <= 14 &&
-            profile.email &&
-            profile.cellphone
+            userCurrent.cellphone
         ) {
             checkProfile = true;
         }
@@ -75,19 +76,57 @@ class StepProfile extends Component {
         this.setState({ checkProfile });
     }
 
+    registerProfile = async () => {
+        const { userCurrent, checkProfile } = this.state;
+        const { changeStep, dispatch } = this.props;
+
+        if (checkProfile) {
+            
+            if (userCurrent.id)
+                await dispatch(acUsers.putUsers(userCurrent));
+
+            changeStep(STEP_REGISTER_ADDRESS);
+
+        } else {
+            await dispatch(acToaster.ACTIVE_TOASTER(
+                'error',
+                'Por favor, preencha os campos obrigatórios corretamente!'
+            ))
+        }
+    }
+
+    saveProfile = async () => {
+        const { userCurrent, checkProfile } = this.state;
+        const { resetUser, dispatch } = this.props;
+
+        if (checkProfile && userCurrent.id) {
+            await dispatch(acUsers.putUsers(userCurrent));
+            resetUser();
+        }
+    }
+
     render() {
 
         const { classes } = this.props;
-        const { profile, checkProfile } = this.state;
+        const { userCurrent, checkProfile } = this.state;
 
         return (
             <Grid container className={classes.root}>
-                        
+
+                <Grid item xs={12} className={classes.pd2}>
+                    <Typography variant="h6" align="center">
+                        Olá, preencha os dados do seu perfil:
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" align="center">
+                        * campos obrigatórios
+                    </Typography>
+                </Grid>
+
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     autoFocus
                     className={classes.textField}
-                    value={profile.firstName}
+                    value={userCurrent.firstName}
                     label="Primeiro Nome"
                     margin="normal"
                     variant="outlined"
@@ -99,7 +138,7 @@ class StepProfile extends Component {
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     className={classes.textField}
-                    value={profile.lastName}
+                    value={userCurrent.lastName}
                     label="Sobrenome"
                     margin="normal"
                     variant="outlined"
@@ -111,7 +150,7 @@ class StepProfile extends Component {
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     className={classes.textField}
-                    value={profile.document}
+                    value={userCurrent.document}
                     label="Documento"
                     margin="normal"
                     variant="outlined"
@@ -123,11 +162,10 @@ class StepProfile extends Component {
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     className={classes.textField}
-                    value={profile.email}
+                    value={userCurrent.email || ''}
                     label="Email"
                     margin="normal"
                     variant="outlined"
-                    required
                     onChange={event => this.inputChange(event, 'email')}
                     />
                 </Grid>
@@ -135,7 +173,7 @@ class StepProfile extends Component {
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     className={classes.textField}
-                    value={profile.cellphone}
+                    value={userCurrent.cellphone}
                     label="Celular"
                     margin="normal"
                     variant="outlined"
@@ -147,7 +185,7 @@ class StepProfile extends Component {
                 <Grid item md={6} sm={12} xs={12} className={classes.pd2}>
                     <TextField
                     className={classes.textField}
-                    value={profile.phone}
+                    value={userCurrent.phone || ''}
                     label="Telefone"
                     margin="normal"
                     variant="outlined"
@@ -159,14 +197,29 @@ class StepProfile extends Component {
                     <Grid container>
 
                         <Grid item xs={12} className={clsx(classes.pd2, classes.alignRight)}>
+                            {userCurrent.id && (
+                                <Button
+                                    disabled={!checkProfile}
+                                    variant="contained"
+                                    color="secondary"
+                                    className={classes.button}
+                                    endIcon={<MdSave/>}
+                                    onClick={this.saveProfile}
+                                    style={{ marginRight: 10 }}
+                                >
+                                    Salvar
+                                </Button>
+                            )}
                             <Button
                                 disabled={!checkProfile}
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
                                 endIcon={<MdSend/>}
+                                onClick={this.registerProfile}
                             >
-                                Avançar
+                                {userCurrent.id && "Salvar e Avançar"}
+                                {!userCurrent.id && "Avançar"}
                             </Button>
                         </Grid>
 
@@ -178,4 +231,8 @@ class StepProfile extends Component {
     }
 }
 
-export default withStyles(style)(StepProfile);
+const mapStateToProps = state => ({
+	rdUsers: state.rdUsers
+});
+
+export default withRouter(connect(mapStateToProps)(withStyles(style)(StepProfile)));

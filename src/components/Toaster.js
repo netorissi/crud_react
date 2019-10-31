@@ -34,6 +34,8 @@ const useStyles1 = makeStyles(theme => ({
 	message: {
 		display: 'flex',
 		alignItems: 'center',
+		fontSize: 14,
+		fontWeight: 'bold'
 	},
 }));
 
@@ -49,7 +51,7 @@ function SnackbarContentWrapper(props) {
 			aria-describedby="client-snackbar"
 			message={
 				<span id="client-snackbar" className={classes.message}>
-					<Icon className={clsx(classes.icon, classes.iconVariant)} />
+					{Icon && <Icon className={clsx(classes.icon, classes.iconVariant)} />}
 					{message}
 				</span>
 			}
@@ -70,11 +72,10 @@ export default props => {
 	return (
 		<Snackbar
 			anchorOrigin={{
-				vertical: props.vertical,
-				horizontal: props.horizontal,
+				vertical: props.vertical || 'top',
+				horizontal: props.horizontal || 'center',
 			}}
 			open={props.open}
-			autoHideDuration={5000}
 		>
 			<SnackbarContentWrapper
 				className={classes.margin}
