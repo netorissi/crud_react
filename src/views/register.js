@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-// ## --------- MATERIAL-UI --------- ## //
+// ## --------- ACTIONS --------- ## //
 import * as acUsers from '../actions/users';
 
 // ## --------- MATERIAL-UI --------- ## //
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 // ## --------- COMPONENTS --------- ## //
 import Stepper from '../components/Stepper';
 import ListUsers from '../components/ListUsers';
+import ModalUser from '../components/ModalUser';
 import StepProfile from '../components/register/StepProfile';
 import StepAddress from '../components/register/StepAddress';
 
@@ -54,6 +55,8 @@ class Register extends Component {
 
     state = {
         userCurrent: {...newUser},
+        userDetail: null,
+        modalUserDetail: false,
         activeStep: STEP_REGISTER_PROFILE
     }
 
@@ -66,9 +69,37 @@ class Register extends Component {
 
     resetUser = () => this.setState({ userCurrent: {...newUser} });
 
+    editUser = user => {
+        this.setState({ 
+            userCurrent: {...user},
+            activeStep: STEP_REGISTER_PROFILE,
+            modalUserDetail: false
+        });
+    }
+    
+    deleteUser = async user => {
+        const { dispatch } = this.props;
+        await dispatch(acUsers.deleteUsers(user));
+        this.setState({ modalUserDetail: false });
+    }
+    
+    viewUser = user => {
+        this.setState({ 
+            userDetail: {...user},
+            modalUserDetail: true
+        });
+    }
+
+    closeUserDetail = () => {
+        this.setState({ 
+            userDetail: null,
+            modalUserDetail: false
+        });
+    }
+
     render() {
 
-        const { activeStep, userCurrent } = this.state;
+        const { activeStep, userCurrent, modalUserDetail, userDetail } = this.state;
         const { users } = this.props.rdUsers;
         
         return (
@@ -107,8 +138,24 @@ class Register extends Component {
                     marginTop: 20
                 }}>
                     <div style={{ width: '100%', maxWidth: 1280 }}>
-                        <ListUsers users={users}/>
+                        <ListUsers 
+                        users={users}
+                        editUser={this.editUser}
+                        viewUser={this.viewUser}
+                        />
                     </div>
+                </Grid>
+
+                <Grid item xs={12}>
+                    {modalUserDetail && userDetail && (
+                        <ModalUser 
+                        open={modalUserDetail}
+                        close={this.closeUserDetail}
+                        userDetail={userDetail}
+                        editUser={this.editUser}
+                        deleteUser={this.deleteUser}
+                        />
+                    )}
                 </Grid>
 
             </Grid>

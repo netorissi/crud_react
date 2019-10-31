@@ -4,8 +4,13 @@ import * as acToaster from './toaster';
 import { BASE_ENDPOINT } from '../routes/names';
 
 const setUsers = users => ({
-	type: actionType.SET_USERS,
+    type: actionType.SET_USERS,
 	payload: { users }
+});
+
+export const setUser = userCurrent => ({
+    type: actionType.SET_USER,
+    payload: { userCurrent }
 });
 
 export const getUsers = () => async dispatch => {

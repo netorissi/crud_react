@@ -29,13 +29,29 @@ class StepProfile extends Component {
         
         this.state = {
             userCurrent,
-            checkProfile: false
+            checkProfile: false,
+            saveEdit: false
         }
     }
 
     componentDidMount() {
         if (window) window.scrollTo(0, 0);
         this.checkProfile();
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.userCurrent !== prevState.userCurrent) {
+            return { userCurrent: nextProps.userCurrent};
+        }
+        else return null;
+    }
+     
+    componentDidUpdate(prevProps, prevState) {
+        if (window) window.scrollTo(0, 0);
+		let { userCurrent } = this.state;
+        if (prevProps.userCurrent !== userCurrent) {
+            this.checkProfile();
+        }
     }
     
     inputChange = (event, field) => {
@@ -53,7 +69,8 @@ class StepProfile extends Component {
         if (field === "cellphone") 
             userCurrent.cellphone = formatters.phoneMask(event.target.value);
             
-        this.setState({ userCurrent });
+        if (userCurrent.id) this.setState({ userCurrent, saveEdit: true });
+        else this.setState({ userCurrent });
         this.checkProfile();
     }
     
@@ -77,13 +94,10 @@ class StepProfile extends Component {
     }
 
     registerProfile = async () => {
-        const { userCurrent, checkProfile } = this.state;
+        const { checkProfile } = this.state;
         const { changeStep, dispatch } = this.props;
 
         if (checkProfile) {
-            
-            if (userCurrent.id)
-                await dispatch(acUsers.putUsers(userCurrent));
 
             changeStep(STEP_REGISTER_ADDRESS);
 
@@ -96,10 +110,10 @@ class StepProfile extends Component {
     }
 
     saveProfile = async () => {
-        const { userCurrent, checkProfile } = this.state;
+        const { userCurrent, checkProfile, saveEdit } = this.state;
         const { resetUser, dispatch } = this.props;
 
-        if (checkProfile && userCurrent.id) {
+        if (checkProfile && userCurrent.id && saveEdit) {
             await dispatch(acUsers.putUsers(userCurrent));
             resetUser();
         }
@@ -108,7 +122,7 @@ class StepProfile extends Component {
     render() {
 
         const { classes } = this.props;
-        const { userCurrent, checkProfile } = this.state;
+        const { userCurrent, checkProfile, saveEdit } = this.state;
 
         return (
             <Grid container className={classes.root}>
@@ -199,7 +213,7 @@ class StepProfile extends Component {
                         <Grid item xs={12} className={clsx(classes.pd2, classes.alignRight)}>
                             {userCurrent.id && (
                                 <Button
-                                    disabled={!checkProfile}
+                                    disabled={!checkProfile || !saveEdit}
                                     variant="contained"
                                     color="secondary"
                                     className={classes.button}
@@ -218,8 +232,7 @@ class StepProfile extends Component {
                                 endIcon={<MdSend/>}
                                 onClick={this.registerProfile}
                             >
-                                {userCurrent.id && "Salvar e Avançar"}
-                                {!userCurrent.id && "Avançar"}
+                                Avançar
                             </Button>
                         </Grid>
 

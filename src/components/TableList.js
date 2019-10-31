@@ -21,7 +21,7 @@ const TableList = props => {
 	const [order, setOrder] = useState(orderInitial);
 	const [orderBy, setOrderBy] = useState(orderByInitial);
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(25);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
 
 	function createSortHandler(event, property) {
 		const isDesc = orderBy === property && order === 'desc';
@@ -105,8 +105,8 @@ const TableList = props => {
 				</TableBody>
 			</Table>
 			<TablePagination
-				style={{ marginTop: 30 }}
-				rowsPerPageOptions={[25]}
+				style={{ margin: 30 }}
+				rowsPerPageOptions={[20]}
 				component="div"
 				count={data.length}
 				rowsPerPage={rowsPerPage}

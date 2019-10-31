@@ -1,7 +1,7 @@
 import * as actionType from '../actions/actionTypes';
 
 const initialState = {
-	users: []
+	users: [],
 };
 
 export default (state = initialState, action) => {

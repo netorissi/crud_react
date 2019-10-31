@@ -8,9 +8,27 @@ export default theme => ({
     pd2: {
         paddingLeft: theme.spacing(1.3),
         paddingRight: theme.spacing(1.3)
-    },
+	},
+	pdModal: {
+		padding: theme.spacing(3),
+		'& h6': {
+			fontWeight: 'bold',
+			color: '#68de39',
+			margin: '20px auto'
+		},
+		'& p': {
+			fontSize: 16,
+			color: '#555',
+			paddingLeft: theme.spacing(1.3),
+			paddingRight: theme.spacing(1.3),
+			margin: '10px auto'
+		}
+	},
     alignRight: {
         textAlign: 'right'
+    },
+    alignCenter: {
+        textAlign: 'center'
     },
     button: {
         marginTop: theme.spacing(2)

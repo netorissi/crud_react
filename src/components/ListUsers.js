@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, TableRow, TableCell, Hidden, Fab, TextField } from '@material-ui/core';
+
+// ## --------- MATERIAL-UI --------- ## //
+import { 
+    withStyles,
+    Grid,
+    TableRow,
+    TableCell,
+    Hidden,
+    Fab,
+    TextField,
+    Typography
+} from '@material-ui/core';
 
 // ## --------- COMPONENTS --------- ## //
 import TableList from './TableList';
@@ -51,7 +62,7 @@ class ListUsers extends Component {
     changeSearch = event => this.setState({ textFilter: event.target.value });
 
     tableContent = (data, order, orderBy, page, rowsPerPage) => {
-		const { classes } = this.props;
+		const { classes, viewUser, editUser } = this.props;
 		const { textFilter } = this.state;
 		if (data && data.length > 0) {
 			return (
@@ -77,26 +88,20 @@ class ListUsers extends Component {
 								</TableCell>
 							</Hidden>
 							<TableCell className={classes.tableText} align="right">
-								<Grid container>
-                                    <Grid item xs={6}>
-                                        <Fab
-										title="Detalhe"
-										className={classes.btnFabView}
-										// onClick={() => this.viewUser(item)}
-										>
-											<MdPersonPin />
-										</Fab>
-                                    </Grid>
-                                    <Grid item xs={6}>
-										<Fab
-										title="Editar"
-										className={classes.btnFabEdit}
-										// onClick={() => this.editUser(item)}
-										>
-											<MdEdit />
-										</Fab>
-                                    </Grid>
-                                </Grid>
+                                <Fab
+                                title="Detalhe"
+                                className={classes.btnFabView}
+                                onClick={() => viewUser(item)}
+                                >
+                                    <MdPersonPin />
+                                </Fab>
+                                <Fab
+                                title="Editar"
+                                className={classes.btnFabEdit}
+                                onClick={() => editUser(item)}
+                                >
+                                    <MdEdit />
+                                </Fab>
 							</TableCell>
 						</TableRow>
 					);
@@ -108,7 +113,7 @@ class ListUsers extends Component {
 			<TableRow tabIndex={-1}>
 				<TableCell colSpan={tableHeaders.length} className={classes.emptyArray}>
 					<MdSentimentDissatisfied/>
-					<p>Nenhum registro encontrado até o momento!</p>
+					<p>Nenhum registro encontrado!</p>
 				</TableCell>
 			</TableRow>
 		)
@@ -158,6 +163,12 @@ class ListUsers extends Component {
         return (
             <Grid container className={classes.root}>
                 
+                <Grid item xs={12} className={classes.pd2}>
+                    <Typography variant="h5" align="center">
+                        Lista de Cadastros
+                    </Typography>
+                </Grid>
+
                 <Grid item xs={12} className={classes.pd2}>
                     <TextField
                     label="Filtro"

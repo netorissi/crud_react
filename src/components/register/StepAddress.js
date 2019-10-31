@@ -31,7 +31,29 @@ class StepAddress extends Component {
         this.state = {
             userCurrent,
             checkAddress: false,
-            checkZipcode: false
+            checkZipcode: false,
+            saveEdit: false
+        }
+    }
+
+    componentDidMount() {
+        let { userCurrent } = this.state;
+        const zipcodeNumber = userCurrent.zipcode.replace(/\D+/g, "");
+        if (zipcodeNumber.length === 8) this.searchZipcode(zipcodeNumber);
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.userCurrent !== prevState.userCurrent) {
+            return { userCurrent: nextProps.userCurrent};
+        }
+        else return null;
+    }
+     
+    componentDidUpdate(prevProps, prevState) {
+        if (window) window.scrollTo(0, 0);
+		let { userCurrent } = this.state;
+        if (prevProps.userCurrent !== userCurrent) {
+            this.checkAddress();
         }
     }
 
@@ -50,7 +72,8 @@ class StepAddress extends Component {
             if (zipcodeNumber.length === 8) this.searchZipcode(zipcodeNumber);
         }
         
-        this.setState({ userCurrent });
+        if (userCurrent.id) this.setState({ userCurrent, saveEdit: true });
+        else this.setState({ userCurrent });
         this.checkAddress();
     }
 
@@ -89,6 +112,7 @@ class StepAddress extends Component {
 		} else {
 			this.setState({ checkZipcode: false });
 		}
+        this.checkAddress();
 	}
     
     checkAddress = () => {
@@ -111,12 +135,12 @@ class StepAddress extends Component {
     }
 
     registerAddress = async () => {
-        const { userCurrent, checkAddress } = this.state;
+        const { userCurrent, checkAddress, saveEdit } = this.state;
         const { changeStep, resetUser, dispatch } = this.props;
 
         if (checkAddress) {
             
-            if (userCurrent.id)
+            if (userCurrent.id && saveEdit)
                 await dispatch(acUsers.putUsers(userCurrent));
             else
                 await dispatch(acUsers.postUsers(userCurrent));
@@ -140,7 +164,7 @@ class StepAddress extends Component {
     render() {
 
         const { classes } = this.props;
-        const { userCurrent, checkAddress, checkZipcode } = this.state;
+        const { userCurrent, checkAddress, checkZipcode, saveEdit } = this.state;
 
         return (
             <Grid container className={classes.root}>
@@ -301,14 +325,18 @@ class StepAddress extends Component {
                         
                         <Grid item xs={6} className={clsx(classes.pd2, classes.alignRight)}>
                             <Button
-                                disabled={!checkAddress}
+                                disabled={!userCurrent.id 
+                                    ? !checkAddress
+                                    : (!checkAddress || !saveEdit)
+                                }
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
                                 endIcon={<MdSend/>}
                                 onClick={this.registerAddress}
                             >
-                                Finalizar
+                                {userCurrent.id && "Salvar Edição"}
+                                {!userCurrent.id && "Finalizar"}
                             </Button>
                         </Grid>
 

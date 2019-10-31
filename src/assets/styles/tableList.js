@@ -1,4 +1,4 @@
-export default theme => ({
+export default () => ({
     tableHeader: {
         fontSize: 12,
         fontWeight: 'bold',
@@ -10,11 +10,5 @@ export default theme => ({
                 color: '#68de39'
             }
         }
-    },
-    tableText: {
-        height: 70,
-        fontSize: 15,
-        verticalAlign: 'middle',
-        color: 'rgba(0,0,0,0.75)'
     }
 })
