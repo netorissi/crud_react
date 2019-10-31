@@ -55,7 +55,6 @@ const tableHeaders = [
 class ListUsers extends Component {
 
     state = {
-		activeSkeleton: true,
 		textFilter: ''
     }
     
@@ -95,13 +94,15 @@ class ListUsers extends Component {
                                 >
                                     <MdPersonPin />
                                 </Fab>
-                                <Fab
-                                title="Editar"
-                                className={classes.btnFabEdit}
-                                onClick={() => editUser(item)}
-                                >
-                                    <MdEdit />
-                                </Fab>
+								<Hidden smDown>
+									<Fab
+									title="Editar"
+									className={classes.btnFabEdit}
+									onClick={() => editUser(item)}
+									>
+										<MdEdit />
+									</Fab>
+								</Hidden>
 							</TableCell>
 						</TableRow>
 					);

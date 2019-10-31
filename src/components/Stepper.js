@@ -1,5 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
+
+// ## --------- MATERIAL-UI --------- ## //
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Stepper, Step, StepLabel, StepConnector } from '@material-ui/core';
 

@@ -1,7 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
+
+// ## --------- MATERIAL-UI --------- ## //
 import { orange, teal, red, cyan } from '@material-ui/core/colors';
 import { Snackbar, SnackbarContent, makeStyles } from '@material-ui/core';
+
+// ## --------- ICONS --------- ## //
 import { MdCheckCircle, MdCancel, MdInfo, MdWarning } from 'react-icons/md';
 
 const variantIcon = {

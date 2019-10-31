@@ -1,7 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+
+// ## --------- IMAGES --------- ## //
 import image404 from '../assets/images/404-not-found.gif';
-import style from '../assets/styles/404NotFound';
+
+// ## --------- MATERIAL-UI --------- ## //
 import { Grid, Typography, Button, withStyles } from '@material-ui/core';
 
 // ## --------- ICONS --------- ## //
@@ -9,6 +12,9 @@ import { MdUndo } from 'react-icons/md';
 
 // ## --------- ROUTES --------- ## //
 import * as routes from '../routes/names';
+
+// ## --------- STYLES --------- ## //
+import style from '../assets/styles/404NotFound';
 
 const NotFound404 = props => {
 
